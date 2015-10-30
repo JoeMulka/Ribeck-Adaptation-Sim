@@ -48,7 +48,7 @@ def mutation(genotype_frequencies, genotype_fitnesses, genotype_mutations, new_p
 
     total_mutants = _bin(new_pop_size, (1 - np.exp(-mut_rate)))  #Calculates the total number of mutants expected this generation
 
-    multiplicity=[] #an array whose indices correspond to number of mutations minus one, and whose entries are the number of
+    multiplicity=[] # an array whose indices correspond to number of mutations minus one, and whose entries are the number of
     #mutated individuals with that number of mutations this generation
     r = total_mutants
     k=2

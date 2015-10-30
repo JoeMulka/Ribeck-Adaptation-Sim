@@ -26,14 +26,11 @@ alpha = 85
 g=6.02 #epistasis parameter
 num_gens = 15000
 num_runs =5
-mutation_tracker_toggle = True #turns the mutation tracker on or off
+mutation_tracker_toggle = False #turns the mutation tracker on or off
 is_binary = True #Which model of reproduction is being used
 can_overwrite=True #sets whether or not you are allowed to overwrite existing files
 output_directory = "C:\Users\Lenski Lab\Documents\Noah's Adaptation Sim\\"
 file_number=3 #allows for different files with the same initial variables
-
-
-
 
 
 def adaptation(current_run):
@@ -103,8 +100,8 @@ for i in xrange(num_runs):
     fitness_trajectories.append(new_fitness_traj)
     fixation_trajectories.append(new_fixation_traj)
     pop_size_trajectories.append(new_pop_size_traj)
-    if (len(new_mut_tracker)!=0): #calculates more accurately the total number of fixations at the end of each run
-        fixed_muts = set(new_mut_tracker[0]) #intersection_update is a function of the set class, so fixed muts needs to be a set
+    if ((len(new_mut_tracker)!=0) & mutation_tracker_toggle == True): #calculates more accurately the total number of fixations at the end of each run
+        fixed_muts = set(new_mut_tracker[0]) #intersection_update is a function of the set class, so fixed muts needs to be casted to a set
         for i in new_mut_tracker[1:]: #The intersection of the first and second mutation list in new_mut_tracker is taken, then 
             fixed_muts.intersection_update(i) #fixed muts is updated to this intersection.  This intersection is then intersected
         fixed_muts = list(fixed_muts) #with the next list.  When all lists have been intersected, the resulting intersection of all lists is turned back into a list type element
