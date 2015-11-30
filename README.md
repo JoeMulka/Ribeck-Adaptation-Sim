@@ -5,6 +5,6 @@ This is the primary storage space for files regarding Dr. Noah Ribeck's E. coli 
 
 If you have any questions, you can contact:
 
-Dr. Noah Ribeck - ribeck.msu.edu
+Dr. Noah Ribeck - ribeck@msu.edu
 
 Joseph Mulka - mulkajos@msu.edu
