@@ -3,7 +3,7 @@ import sys
 import time
 import numpy as np, scipy.special, random, bisect, time
 import cProfile, pstats, StringIO
-from matplotlib import pyplot
+#from matplotlib import pyplot
 from IPython.display import clear_output
 import csv
 import os
@@ -52,7 +52,6 @@ def adaptation(current_run):
             #does not yet work with multiple runs
     
     for i in xrange(num_gens):
-        
         p, new_pop_size, dot_product = _func.reproduction(p, w, dot_product,is_binary,pop_size) #REPRODUCTION
         p, w, m, added_fitness,master_mut_list,master_mut_list_background,mutation_tracker = _func.mutation(p, w, m, new_pop_size,
                                                                                                             master_mut_list,master_mut_list_background,mutation_tracker,mutation_tracker_toggle,
@@ -67,16 +66,19 @@ def adaptation(current_run):
         fitnesses.append(mean_fitness)
         fixations.append(min(m)) 
         pop_sizes.append(new_pop_size)
-    
-        formatted_output= "current run: " + `current_run` + "  generation: " + `i+1` \
-        + "  mean fitness: " + '%.4f'% mean_fitness + "  fixations: " + `fixations[-1]`
+
+        if i % 1000 == 0: # prints every 1000 generations
+            formatted_output= "current run: " + `current_run` + "  generation: " + `i` \
+            + "  mean fitness: " + '%.4f'% mean_fitness + "  fixations: " + `fixations[-1]`#had i+1 earlier, check accuracy of i with actual gen number
         
-        print (formatted_output,end = '\r')
-   
-    if i+1==num_gens and current_run==num_runs:
-        print (formatted_output) #ensures the last bit of output doesn't get accidentally cleared
-    
-    
+            print (formatted_output,end = '\r')
+            a=5
+
+    if i+1==num_gens and current_run==num_runs:  #ensures the last bit of output doesn't get accidentally cleared
+        formatted_output= "current run: " + `current_run` + "  generation: " + `i+1` \
+            + "  mean fitness: " + '%.4f'% mean_fitness + "  fixations: " + `fixations[-1]`
+        print (formatted_output)
+
     return fitnesses, fixations, pop_sizes,master_mut_list,master_mut_list_background,mutation_tracker
     
     
