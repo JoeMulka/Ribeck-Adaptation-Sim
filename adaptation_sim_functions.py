@@ -1,6 +1,6 @@
 __author__ = 'Lenski Lab'
 # This file contains functions for use with the adaptation sim
-import numpy as np, scipy.special, random, bisect, time
+import numpy as np, scipy.special, random, bisect, time, os
 from itertools import izip
 _bin = np.random.binomial
 _exp = np.random.exponential
@@ -114,3 +114,11 @@ def mutation(genotype_frequencies, genotype_fitnesses, genotype_mutations, new_p
 
     return genotype_frequencies, genotype_fitnesses, genotype_mutations, added_fitness,master_mut_list,master_mut_list_background,mutation_tracker
 
+def name_fixer(target_file_name, file_type,attempt_number):
+    append_number = attempt_number + 1
+    if os.path.isfile(target_file_name + file_type)==False:
+        return target_file_name+file_type
+    if os.path.isfile(target_file_name + "("+`append_number`+")"+file_type)==False:
+        return target_file_name + "("+`append_number`+")"+file_type
+    else:
+        return name_fixer(target_file_name,file_type,attempt_number+1)

@@ -9,6 +9,7 @@ import csv
 import os
 import os.path
 import adaptation_sim_functions
+import datetime
 
 _exp = np.random.exponential
 _bin = np.random.binomial
@@ -25,12 +26,12 @@ mut_rate = 1.68E-7
 alpha = 85
 g=6.02 #epistasis parameter
 num_gens = 15000
-num_runs =5
+num_runs =3
 mutation_tracker_toggle = False #turns the mutation tracker on or off
 is_binary = True #Which model of reproduction is being used
 can_overwrite=True #sets whether or not you are allowed to overwrite existing files
 output_directory = "C:\Users\Lenski Lab\Documents\Noah's Adaptation Sim\\"
-file_number=3 #allows for different files with the same initial variables
+
 
 
 def adaptation(current_run):
@@ -85,9 +86,9 @@ def adaptation(current_run):
 
 #MAIN
 
+#Main runs the simulation several times and gathers the results
 
-
-
+start_time = datetime.datetime.now()
 #RUN ADAPTATION MULTIPLE TIMES
 fitness_trajectories = [] #A list of lists.  Index is run number, values are fitness-over-generation lists
 fixation_trajectories = [] #similar to above
@@ -138,8 +139,9 @@ for i in xrange(num_gens+1):
     #averaged
     
 clear_output()
-print("averaging: "+`num_gens`+"/"+`num_gens`+  "  Averaging Complete at mut_rate: "+ `mut_rate`) #displays when averaging is done 
-    
+print("averaging: "+`num_gens`+"/"+`num_gens`+  "  Averaging Complete at mut_rate: "+ `mut_rate`) #displays when averaging is done
+time_elapsed = str(datetime.datetime.now() - start_time)
+print("time elapsed: " + time_elapsed)
     
     
 #CSV WRITER
@@ -158,41 +160,41 @@ error_message="Warning, a file you are trying to write to already exists.  If yo
 
 
 #All the data
-file_name = output_directory + `file_number` + "_" + "fitness" + generic_file_name + ".csv"
-if (((os.path.isfile(file_name)==False) or (can_overwrite==True))): #Checks if the file already exists
-    with open(file_name, 'wb') as csvfile:
-        outwriter = csv.writer(csvfile, delimiter=',',
-                                quotechar=' ', quoting=csv.QUOTE_MINIMAL)
-        for i in xrange(num_gens):
-            outwriter.writerow(fitness_trajectories[i].tolist())
-else:
-    print (error_message+file_name)
+file_name = output_directory   + "fitness" + generic_file_name
+file_type=".csv"
+file_path  = adaptation_sim_functions.name_fixer(file_name, file_type,1) #Checks if the file already exists, and appends a number if it does
+with open(file_path, 'wb') as csvfile:
+    outwriter = csv.writer(csvfile, delimiter=',',
+                            quotechar=' ', quoting=csv.QUOTE_MINIMAL)
+    for i in xrange(num_gens):
+        outwriter.writerow(fitness_trajectories[i].tolist())
+
         
-file_name= output_directory +`file_number`+ "_"+"fixation"+generic_file_name+".csv"
-if (((os.path.isfile(file_name)==False) or (can_overwrite==True)) ):
-    with open(file_name,'wb') as csvfile:
-        outwriter = csv.writer(csvfile, delimiter=',',
-                                quotechar=' ', quoting=csv.QUOTE_MINIMAL)
-        for i in xrange(num_gens):
-            outwriter.writerow(fixation_trajectories[i].tolist())
-else:
-    print (error_message+file_name)
+file_name= output_directory +"fixation"+generic_file_name
+file_type=".csv"
+file_path  = adaptation_sim_functions.name_fixer(file_name,file_type,1)
+with open(file_path,'wb') as csvfile:
+    outwriter = csv.writer(csvfile, delimiter=',',
+                            quotechar=' ', quoting=csv.QUOTE_MINIMAL)
+    for i in xrange(num_gens):
+        outwriter.writerow(fixation_trajectories[i].tolist())
+
     
 #mutation tracker
 #concatenates the fixed mutation effect sizes of all the runs
 if (mutation_tracker_toggle==True):
-    file_name =output_directory + `file_number`+"_"+"mutation_tracker"+generic_file_name+".csv"
-    if (((os.path.isfile(file_name)==False) or (can_overwrite==True))):
-        with open(file_name,'wb') as csvfile:
-            outwriter = csv.writer(csvfile, delimiter=',',
-                                    quotechar=' ', quoting=csv.QUOTE_MINIMAL)
-            outwriter.writerow(["Fixed Mutations","Fixed Mutations w/ Background"])
-            for i in xrange(len(fixed_muts_trajectory)):
-                outwriter.writerow([fixed_muts_trajectory[i],fixed_mut_back_trajectory[i]])
-    else:
-        print (error_message+file_name)
+    file_name =output_directory +"mutation_tracker"+generic_file_name
+    file_type=".csv"
+    file_path  = adaptation_sim_functions.name_fixer(file_name,file_type,1)
+    with open(file_path,'wb') as csvfile:
+        outwriter = csv.writer(csvfile, delimiter=',',
+                                quotechar=' ', quoting=csv.QUOTE_MINIMAL)
+        outwriter.writerow(["Fixed Mutations","Fixed Mutations w/ Background"])
+        for i in xrange(len(fixed_muts_trajectory)):
+            outwriter.writerow([fixed_muts_trajectory[i],fixed_mut_back_trajectory[i]])
 
-"""file_name = output_directory + `file_number`+ "_"+"pop_size"+generic_file_name+".csv"#this could get the axe
+
+"""file_name = output_directory + "_"+"pop_size"+generic_file_name#this could get the axe
 if (((os.path.isfile(file_name)==False) or (can_overwrite==True))):
     with open(file_name,'wb') as csvfile:
         outwriter = csv.writer(csvfile, delimiter=',',
