@@ -1,13 +1,7 @@
 from __future__ import print_function
-import sys
-import time
 import numpy as np, scipy.special, random, bisect, time
-import cProfile, pstats, StringIO
-#from matplotlib import pyplot
 from IPython.display import clear_output
 import csv
-import os
-import os.path
 import adaptation_sim_functions
 import datetime
 
@@ -22,10 +16,10 @@ _func = adaptation_sim_functions
 
 #Variable Initialization
 pop_size = 3.3E7
-mut_rate = 1E-6
+mut_rate = 1E-4
 alpha = 100 #describes mean of distribution from which beneficial effect sizes are drawn from higher alpha means smaller beneficial mutations
 g=0 #epistasis parameter
-num_gens = 50000
+num_gens = 5000
 mutation_tracker_toggle = False #turns the mutation tracker on or off
 is_binary = False #Which model of reproduction is being used
 can_overwrite=True #sets whether or not you are allowed to overwrite existing files
@@ -88,7 +82,6 @@ def adaptation():
 #Main runs the simulation several times and gathers the results
 
 start_time = datetime.datetime.now()
-#RUN ADAPTATION MULTIPLE TIMES
 fitness_trajectories = [] #A list of lists.  Index is run number, values are fitness-over-generation lists
 fixation_trajectories = [] #similar to above
 pop_size_trajectories = [] #similar to above
@@ -123,21 +116,9 @@ fixation_trajectories = np.transpose(fixation_trajectories)
 pop_size_trajectories = np.transpose(pop_size_trajectories)
 #puts generation number in [i]axis and run number within the [i] axis of the inner lists
 
-#CALCULATE AVERAGE TRAJECTORIES
-mean_fitness_trajectory = [] #indices are generation number, values are mean fitness of all runs
-mean_fixation_trajectory = [] #similar to above
-mean_pop_size_trajectory = [] #similar to above
-
-for i in xrange(num_gens+1):
-    mean_fitness_trajectory.append(np.mean(fitness_trajectories[i]))
-    mean_fixation_trajectory.append(np.mean(fixation_trajectories[i]))
-    mean_pop_size_trajectory.append(np.mean(pop_size_trajectories[i]))
     
-    print("averaging: "+`i`+"/"+`num_gens`,end='\r') #Shows the user how much time is spent averaging/which generation is being
-    #averaged
-    
-clear_output()
 print("averaging: "+`num_gens`+"/"+`num_gens`+  "  Averaging Complete at mut_rate: "+ `mut_rate`) #displays when averaging is done
+clear_output()
 time_elapsed = str(datetime.datetime.now() - start_time)
 print("time elapsed: " + time_elapsed)
     
