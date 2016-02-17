@@ -15,16 +15,15 @@ _std=np.std
 _func = adaptation_sim_functions
 
 #Variable Initialization
-pop_size = 3.3E7
-mut_rate = 1E-4
+pop_size = 3.4E7
+mut_rate = 1E-8
 alpha = 100 #describes mean of distribution from which beneficial effect sizes are drawn from higher alpha means smaller beneficial mutations
 g=0 #epistasis parameter
 num_gens = 5000
 mutation_tracker_toggle = False #turns the mutation tracker on or off
 is_binary = False #Which model of reproduction is being used
 can_overwrite=True #sets whether or not you are allowed to overwrite existing files
-output_directory = "C:\Users\Lenski Lab\Documents\Noah's Adaptation Sim\\"
-
+output_directory = "/mnt/home/mulkajos/"
 
 
 def adaptation():

@@ -1,0 +1,12 @@
+After transferring a qsub file to the HPCC, you must type:
+
+	dos2unix <qsubname>.qsub
+
+This is because on a Windows computer the newline characters are different
+than they are in Unix, which is what the HPCC is on.
+
+Then type:
+
+qsub <qsubname>.qsub
+
+
