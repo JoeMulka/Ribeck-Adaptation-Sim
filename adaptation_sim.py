@@ -16,10 +16,10 @@ _func = adaptation_sim_functions
 
 #Variable Initialization
 pop_size = 3.4E7
-mut_rate = 1E-8
+mut_rate = 1E-4
 alpha = 100 #describes mean of distribution from which beneficial effect sizes are drawn from higher alpha means smaller beneficial mutations
 g=0 #epistasis parameter
-num_gens = 5000
+num_gens = 50000
 mutation_tracker_toggle = False #turns the mutation tracker on or off
 is_binary = False #Which model of reproduction is being used
 can_overwrite=True #sets whether or not you are allowed to overwrite existing files
@@ -64,13 +64,13 @@ def adaptation():
             formatted_output= "generation: " + `i` \
             + "  mean fitness: " + '%.4f'% mean_fitness + "  fixations: " + `fixations[-1]`#had i+1 earlier, check accuracy of i with actual gen number
         
-            print (formatted_output,end = '\r')
+           # print (formatted_output,end = '\r')
             a=5
 
     if i+1==num_gens:  #ensures the last bit of output doesn't get accidentally cleared
         formatted_output= "generation: " + `i+1` \
             + "  mean fitness: " + '%.4f'% mean_fitness + "  fixations: " + `fixations[-1]`
-        print (formatted_output)
+       # print (formatted_output)
 
     return fitnesses, fixations, pop_sizes,master_mut_list,master_mut_list_background,mutation_tracker
     
@@ -116,10 +116,10 @@ pop_size_trajectories = np.transpose(pop_size_trajectories)
 #puts generation number in [i]axis and run number within the [i] axis of the inner lists
 
     
-print("averaging: "+`num_gens`+"/"+`num_gens`+  "  Averaging Complete at mut_rate: "+ `mut_rate`) #displays when averaging is done
+#print("averaging: "+`num_gens`+"/"+`num_gens`+  "  Averaging Complete at mut_rate: "+ `mut_rate`) #displays when averaging is done
 clear_output()
 time_elapsed = str(datetime.datetime.now() - start_time)
-print("time elapsed: " + time_elapsed)
+#print("time elapsed: " + time_elapsed)
     
     
 #CSV WRITER

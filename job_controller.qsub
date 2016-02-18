@@ -1,5 +1,5 @@
 #!/bin/bash -login
-#PBS -l walltime=00:00:20,nodes=1:ppn=1
+#PBS -l walltime=00:5:00,nodes=1:ppn=1
 #PBS -j oe
 #PBS -N test_job
  
@@ -12,4 +12,7 @@
 cd /mnt/home/mulkajos
  
 # call your executable
-python test.py
+for i in {1..15}
+do
+	qsub adaptation_sim.qsub
+done
