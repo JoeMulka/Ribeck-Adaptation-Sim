@@ -12,4 +12,4 @@
 cd /mnt/home/mulkajos
  
 # call your executable
-python test.py
+python testjob.py

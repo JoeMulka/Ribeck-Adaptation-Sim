@@ -15,8 +15,8 @@ _std=np.std
 _func = adaptation_sim_functions
 
 #Variable Initialization
-pop_size = 3.4E7
-mut_rate = 1E-4
+pop_size = 1.0E7
+mut_rate = 1.0E-2
 alpha = 100 #describes mean of distribution from which beneficial effect sizes are drawn from higher alpha means smaller beneficial mutations
 g=0 #epistasis parameter
 num_gens = 50000
@@ -119,7 +119,7 @@ pop_size_trajectories = np.transpose(pop_size_trajectories)
 #print("averaging: "+`num_gens`+"/"+`num_gens`+  "  Averaging Complete at mut_rate: "+ `mut_rate`) #displays when averaging is done
 clear_output()
 time_elapsed = str(datetime.datetime.now() - start_time)
-#print("time elapsed: " + time_elapsed)
+print("time elapsed: " + time_elapsed)
     
     
 #CSV WRITER
