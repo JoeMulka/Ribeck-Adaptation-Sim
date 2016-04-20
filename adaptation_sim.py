@@ -4,6 +4,7 @@ from IPython.display import clear_output
 import csv
 import adaptation_sim_functions
 import datetime
+import sys
 
 _exp = np.random.exponential
 _bin = np.random.binomial
@@ -13,6 +14,8 @@ _polyfit = np.polyfit
 _poly1d = np.poly1d
 _std=np.std
 _func = adaptation_sim_functions
+
+
 
 #Variable Initialization
 pop_size = 1.0E7
@@ -24,7 +27,14 @@ mutation_tracker_toggle = False #turns the mutation tracker on or off
 is_binary = False #Which model of reproduction is being used
 can_overwrite=True #sets whether or not you are allowed to overwrite existing files
 output_directory = "/mnt/home/mulkajos/"
-
+cmd_input = 100
+#Overwrite initial variables with command line inputs
+if len(sys.argv) >1:
+    try:
+        cmd_input = int(sys.argv[1])
+    except:
+        print("make sure your input argument is a number!")
+    mut_rate = 1.0 * 10**(-1* cmd_input)
 
 def adaptation():
     
