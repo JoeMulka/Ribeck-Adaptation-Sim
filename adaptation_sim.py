@@ -26,7 +26,7 @@ num_gens = 50000
 mutation_tracker_toggle = False #turns the mutation tracker on or off
 is_binary = False #Which model of reproduction is being used
 can_overwrite=True #sets whether or not you are allowed to overwrite existing files
-output_directory = "/mnt/home/mulkajos/"
+output_directory = ""
 cmd_input = 100
 #Overwrite initial variables with command line inputs
 if len(sys.argv) >1:
