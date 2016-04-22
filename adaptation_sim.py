@@ -19,7 +19,7 @@ _func = adaptation_sim_functions
 
 #Variable Initialization
 pop_size = 1.0E7
-mut_rate = 1.0E-2
+mut_rate = 1.0E-8
 alpha = 100 #describes mean of distribution from which beneficial effect sizes are drawn from higher alpha means smaller beneficial mutations
 g=0 #epistasis parameter
 num_gens = 50000
@@ -34,7 +34,9 @@ if len(sys.argv) >1:
         cmd_input = int(sys.argv[1])
     except:
         print("make sure your input argument is a number!")
-    mut_rate = 1.0 * 10**(-1* cmd_input)
+    if (cmd_input > 0): #ensures that the exponent is negative - a positive one will not be needed
+        cmd_input = cmd_input *-1
+    mut_rate = 1.0 * 10**(cmd_input)
 
 def adaptation():
     
