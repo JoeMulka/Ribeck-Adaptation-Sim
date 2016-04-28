@@ -26,14 +26,16 @@ num_gens = 50000
 mutation_tracker_toggle = False #turns the mutation tracker on or off
 is_binary = False #Which model of reproduction is being used
 can_overwrite=True #sets whether or not you are allowed to overwrite existing files
-output_directory = ""
+output_directory = "/mnt/home/mulkajos/"
 cmd_input = 100
+job_id = "0"
 #Overwrite initial variables with command line inputs
-if len(sys.argv) >1:
+if len(sys.argv) >2:
     try:
         cmd_input = int(sys.argv[1])
+        job_id = sys.argv[2]
     except:
-        print("make sure your input argument is a number!")
+        print("make sure your first input argument is a number, and the second is the jobID")
     if (cmd_input > 0): #ensures that the exponent is negative - a positive one will not be needed
         cmd_input = cmd_input *-1
     mut_rate = 1.0 * 10**(cmd_input)
@@ -150,7 +152,7 @@ error_message="Warning, a file you are trying to write to already exists.  If yo
 
 
 #All the data
-file_name = output_directory   + "fitness" + generic_file_name
+file_name = output_directory   + "fitness" + generic_file_name+ "_"+ job_id
 file_type=".csv"
 file_path  = adaptation_sim_functions.name_fixer(file_name, file_type,1) #Checks if the file already exists, and appends a number if it does
 with open(file_path, 'wb') as csvfile:
@@ -160,7 +162,7 @@ with open(file_path, 'wb') as csvfile:
         outwriter.writerow(fitness_trajectories[i].tolist())
 
         
-file_name= output_directory +"fixation"+generic_file_name
+file_name= output_directory +"fixation"+generic_file_name + "_"+job_id
 file_type=".csv"
 file_path  = adaptation_sim_functions.name_fixer(file_name,file_type,1)
 with open(file_path,'wb') as csvfile:
@@ -173,7 +175,7 @@ with open(file_path,'wb') as csvfile:
 #mutation tracker
 #concatenates the fixed mutation effect sizes of all the runs
 if (mutation_tracker_toggle==True):
-    file_name =output_directory +"mutation_tracker"+generic_file_name
+    file_name =output_directory +"mutation_tracker"+generic_file_name+"_"+job_id
     file_type=".csv"
     file_path  = adaptation_sim_functions.name_fixer(file_name,file_type,1)
     with open(file_path,'wb') as csvfile:
