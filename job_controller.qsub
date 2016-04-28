@@ -12,7 +12,7 @@
 cd /mnt/home/mulkajos
  
 # call your executable
-for i in {1..15}
+for i in {1..50}
 do
 	qsub adaptation_sim.qsub
 done
