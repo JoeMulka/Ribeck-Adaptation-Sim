@@ -22,23 +22,40 @@ pop_size = 1.0E7
 mut_rate = 1.0E-8
 alpha = 100 #describes mean of distribution from which beneficial effect sizes are drawn from higher alpha means smaller beneficial mutations
 g=0 #epistasis parameter
-num_gens = 50000
+num_gens = 100000
 mutation_tracker_toggle = False #turns the mutation tracker on or off
 is_binary = False #Which model of reproduction is being used
 can_overwrite=True #sets whether or not you are allowed to overwrite existing files
 output_directory = "/mnt/home/mulkajos/"
 cmd_input = 100
 job_id = "0"
+
 #Overwrite initial variables with command line inputs
-if len(sys.argv) >2:
+if len(sys.argv) >1:
     try:
         cmd_input = int(sys.argv[1])
-        job_id = sys.argv[2]
     except:
-        print("make sure your first input argument is a number, and the second is the jobID")
+        print("make sure your first input argument is exponent of the mutation rate (int), second is the job ID (string), and third is the number of generations (int).\n"
+              "default values \n mutation rate: 8 \n job ID: \"\" \n number of generations: 100000")
     if (cmd_input > 0): #ensures that the exponent is negative - a positive one will not be needed
         cmd_input = cmd_input *-1
     mut_rate = 1.0 * 10**(cmd_input)
+if len(sys.argv) >2:
+    try:
+        job_id = sys.argv[2]
+    except:
+        print("")
+if len(sys.argv) >3:
+    num_gens = sys.argv[3]
+    try:
+        num_gens = int(num_gens)
+    except:
+        print("make sure your first input argument is exponent of the mutation rate (int), second is the job ID (string), and third is the number of generations (int).\n"
+          "default values \n mutation rate: 8 \n job ID: \"\" \n number of generations: 100000")
+else:
+        print("make sure your first input argument is exponent of the mutation rate (int), second is the job ID (string), and third is the number of generations (int).\n"
+              "default values \n mutation rate: 8 \n job ID: \"\" \n number of generations: 100000")
+
 
 def adaptation():
     
@@ -150,6 +167,14 @@ error_message="Warning, a file you are trying to write to already exists.  If yo
                + "overwrite, then set the \'can_overwrite\' tag to \'True\'" + '\n' \
                +"File was: "
 
+#includes the reproduction type in the file name
+repro_type =""
+if (is_binary):
+    repro_type ="B"
+else:
+    repro_type="P"
+
+generic_file_name = generic_file_name +"_"+repro_type+"_"
 
 #All the data
 file_name = output_directory   + "fitness" + generic_file_name+ "_"+ job_id

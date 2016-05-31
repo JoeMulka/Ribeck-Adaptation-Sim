@@ -1,0 +1,16 @@
+
+Lmod Warning: numpy not found, loading: NumPy/1.6.1
+Make sure you set the proper number of CPUs in your job script for the number of threads generated
+See https://wiki.hpcc.msu.edu/display/hpccdocs/NumPy+and+SciPy
+
+The following have been reloaded with a version change:
+  1) MKL/11.1 => MKL/10.3
+
+
+Lmod Warning: scipy not found, loading: SciPy/0.9.0
+Make sure you set the proper number of CPUs in your job script for the number of threads generated
+See https://wiki.hpcc.msu.edu/display/hpccdocs/NumPy+and+SciPy
+SciPy could be faster.  See:  https://wiki.hpcc.msu.edu/display/hpccdocs/NumPy+and+SciPy
+
+Lmod Warning: ipython not found, loading: iPython/2.3.0
+[2K[2Ktime elapsed: 4:51:05.382894

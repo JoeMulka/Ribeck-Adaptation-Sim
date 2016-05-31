@@ -1,5 +1,5 @@
 #!/bin/bash -login
-#PBS -l walltime=00:05:00,nodes=1:ppn=1
+#PBS -l walltime=144:00:00,nodes=1:ppn=1
 #PBS -j oe
 #PBS -N adaptation_sim
  
@@ -12,4 +12,4 @@
 cd /mnt/home/mulkajos
  
 # call your executable
-python adaptation_sim.py 7 $PBS_JOBID
+python adaptation_sim.py 1 $PBS_JOBID 10000
