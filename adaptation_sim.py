@@ -44,7 +44,7 @@ def adaptation():
                     #index is the ID's of the mutations that it has
             #does not yet work with multiple runs
     
-    for i in xrange(num_gens):
+    for i in range(num_gens):
         p, new_pop_size, dot_product = _func.reproduction(p, w, dot_product,is_binary,pop_size) #REPRODUCTION
         p, w, m, added_fitness,master_mut_list,master_mut_list_background,mutation_tracker = _func.mutation(p, w, m, new_pop_size,
                                                                                                             master_mut_list,master_mut_list_background,mutation_tracker,mutation_tracker_toggle,
@@ -144,7 +144,7 @@ file_path  = adaptation_sim_functions.name_fixer(file_name, file_type,1) #Checks
 with open(file_path, 'wb') as csvfile:
     outwriter = csv.writer(csvfile, delimiter=',',
                             quotechar=' ', quoting=csv.QUOTE_MINIMAL)
-    for i in xrange(num_gens):
+    for i in range(num_gens):
         outwriter.writerow(fitness_trajectories[i].tolist())
 
         
@@ -154,7 +154,7 @@ file_path  = adaptation_sim_functions.name_fixer(file_name,file_type,1)
 with open(file_path,'wb') as csvfile:
     outwriter = csv.writer(csvfile, delimiter=',',
                             quotechar=' ', quoting=csv.QUOTE_MINIMAL)
-    for i in xrange(num_gens):
+    for i in range(num_gens):
         outwriter.writerow(fixation_trajectories[i].tolist())
 
     
@@ -168,7 +168,7 @@ if (mutation_tracker_toggle==True):
         outwriter = csv.writer(csvfile, delimiter=',',
                                 quotechar=' ', quoting=csv.QUOTE_MINIMAL)
         outwriter.writerow(["Fixed Mutations","Fixed Mutations w/ Background"])
-        for i in xrange(len(fixed_muts_trajectory)):
+        for i in range(len(fixed_muts_trajectory)):
             outwriter.writerow([fixed_muts_trajectory[i],fixed_mut_back_trajectory[i]])
 
 
@@ -177,7 +177,7 @@ if (((os.path.isfile(file_name)==False) or (can_overwrite==True))):
     with open(file_name,'wb') as csvfile:
         outwriter = csv.writer(csvfile, delimiter=',',
                                 quotechar=' ', quoting=csv.QUOTE_MINIMAL)
-        for i in xrange(num_gens):
+        for i in range(num_gens):
             outwriter.writerow(pop_size_trajectories[i].tolist())
 else:
     print (error_message+file_name) 
