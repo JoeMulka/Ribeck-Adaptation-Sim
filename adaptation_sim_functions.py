@@ -1,6 +1,6 @@
 __author__ = "Lenski Lab"
 # This file contains functions for use with the adaptation sim
-import numpy as np, scipy.special, random, bisect, time, os
+import numpy as np, scipy.special, random, bisect, os
 
 _bin = np.random.binomial
 _exp = np.random.exponential

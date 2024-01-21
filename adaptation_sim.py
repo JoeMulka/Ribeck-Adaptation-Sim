@@ -1,11 +1,10 @@
-import numpy as np, scipy.special, random, bisect, time
+import numpy as np, scipy.special
 from IPython.display import clear_output
 import csv
 import adaptation_sim_functions
 import datetime
 import argparse
 import os
-import pandas as pd
 
 _exp = np.random.exponential
 _bin = np.random.binomial
