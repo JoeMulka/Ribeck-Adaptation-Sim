@@ -6,13 +6,7 @@ import datetime
 import argparse
 import os
 
-_exp = np.random.exponential
-_bin = np.random.binomial
-_poisson = np.random.poisson
-_gamma = scipy.special.gammainc
-_polyfit = np.polyfit
-_poly1d = np.poly1d
-_std = np.std
+
 _func = adaptation_sim_functions
 
 
@@ -278,14 +272,14 @@ def write_output(
     file_name = os.path.join(args.output_directory, "fitness" + generic_file_name)
     file_type = ".csv"
     # Checks if the file already exists, and appends a number if it does
-    file_path = adaptation_sim_functions.name_fixer(file_name, file_type, 1)
+    file_path = _func.name_fixer(file_name, file_type, 1)
 
     with open(file_path, "w") as csvfile:
         np.savetxt(file_path, fitness_trajectories, delimiter=",")
 
     file_name = os.path.join(args.output_directory, "fixation" + generic_file_name)
     file_type = ".csv"
-    file_path = adaptation_sim_functions.name_fixer(file_name, file_type, 1)
+    file_path = _func.name_fixer(file_name, file_type, 1)
     with open(file_path, "wb") as csvfile:
         np.savetxt(file_path, fixation_trajectories, delimiter=",")
 
@@ -296,7 +290,7 @@ def write_output(
             args.output_directory, "mutation_tracker" + generic_file_name
         )
         file_type = ".csv"
-        file_path = adaptation_sim_functions.name_fixer(file_name, file_type, 1)
+        file_path = _func.name_fixer(file_name, file_type, 1)
         with open(file_path, "w") as csvfile:
             outwriter = csv.writer(
                 csvfile, delimiter=",", quotechar="|", quoting=csv.QUOTE_MINIMAL
@@ -307,7 +301,7 @@ def write_output(
     if args.pop_size_trajectories == True:
         file_name = os.path.join(args.output_directory, "pop_size" + generic_file_name)
         file_type = ".csv"
-        file_path = adaptation_sim_functions.name_fixer(file_name, file_type, 1)
+        file_path = _func.name_fixer(file_name, file_type, 1)
 
         with open(file_path, "wb") as csvfile:
             outwriter = csv.writer(
