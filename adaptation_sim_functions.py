@@ -80,6 +80,7 @@ def mutation(
 
     # An array whose indices correspond to number of mutations minus one, and whose entries are the number of
     # mutated individuals with that number of mutations this generation
+    # Example: [100,2] means that 100 individuals have 1 mutation, and 2 individuals have 2 mutations this generation
     multiplicity = []
     r = total_mutants
     k = 2
@@ -150,12 +151,26 @@ def mutation(
 
         # sets the updated fitness of the new mutant
         genotype_fitnesses.append(mutant_fitness)
+        # The mutation tracker is a list of lists, where each list is the ID numbers of the mutations that a genotype has.
+        # It is memory intensive to track the ID of each mutation at high mutation rate, so this is an optional feature
+        # The IDs of each mutation form a sort of "list of genes" for each genotype.  Multiplying the fitnesses of each
+        # of these mutations together gives the fitness of the genotype.
         if mutation_tracker_toggle == True:
             # Adds the ID numbers of the mutations that this genotype now has to the mutation tracker
+            # The new mutant's list of mutation IDs contains all the IDs that the parent genotype had, plus the new mutation ID
+            # In high mutation rate simulations, there can me multiple mutations on an individual at the same time, so we add
+            # multiple mutation IDs to the list
+            # The mutations have already been added to the master_mut_list, which records fitness value of all mutations for all genotypes
+            # so for a single mutant the next id number is len(master_mut_list) - 1
+            # [:] takes a shallow copy of a list
+            # Example:  an individual with parent having mutation tracker [1], aquiring one mutation this generation,
+            # which is the 4th mutation to occur in the entire experiment, should get the new mutation tracker [1,4]
+            # Example, an individual with parent having mutation tracker [1], aquiring two mutations this generation,
+            # which are the 4th and 5th mutations to occur in the entire experiment, should get the new mutation tracker [1,4,5].
             mutation_tracker.append(
                 mutation_tracker[this_geno][:]
                 + [
-                    x + len(master_mut_list) - multiplicity_counter
+                    len(master_mut_list) - multiplicity_counter + x
                     for x in range(multiplicity_counter)
                 ]
             )
