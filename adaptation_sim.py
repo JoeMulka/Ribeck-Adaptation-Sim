@@ -17,6 +17,75 @@ _std = np.std
 _func = adaptation_sim_functions
 
 
+def setup_arguments():
+    parser = argparse.ArgumentParser(description="Run adaptation simulation")
+    parser.add_argument(
+        "-p",
+        "--pop-size",
+        type=float,
+        default=3.4e7,
+        help="population size",
+    )
+    parser.add_argument(
+        "-m",
+        "--mut-rate",
+        type=float,
+        default=1e-7,
+        help="mutation rate",
+    )
+    parser.add_argument(
+        "-a",
+        "--alpha",
+        type=float,
+        default=100,
+        help="Describes mean of distribution from which beneficial effect sizes are drawn from higher alpha means smaller beneficial mutations",
+    )
+    parser.add_argument("-g", "--g", type=float, default=0, help="epistasis parameter")
+    parser.add_argument(
+        "-n",
+        "--num-gens",
+        type=int,
+        default=50,
+        help="number of generations",
+    )
+    parser.add_argument(
+        "-t",
+        "--mutation-tracker-toggle",
+        action="store_true",
+        help="turns mutation tracker on or off",
+    )
+    parser.add_argument(
+        "-b",
+        "--is-binary",
+        action="store_true",
+        help="sets whether or not you are using binary fission",
+    )
+    parser.add_argument(
+        "-v",
+        "--can-overwrite",
+        action="store_true",
+        help="sets whether or not you are allowed to overwrite existing files",
+    )
+    parser.add_argument(
+        "-o", "--output_directory", type=str, default=".", help="output directory"
+    )
+    parser.add_argument(
+        "-u",
+        "--progress-update-interval",
+        type=int,
+        default=10,
+        help="sets how often the program prints out the generation number and mean fitness",
+    )
+    parser.add_argument(
+        "--pop-size-trajectories",
+        action="store_true",
+        help="sets whether to write population size trajectories to file",
+    )
+
+    args = parser.parse_args()
+    return args
+
+
 def adaptation(
     pop_size,
     mut_rate,
@@ -46,10 +115,19 @@ def adaptation(
     mutation_tracker = [[]]
 
     for i in range(num_gens):
+        # prints every progress_update_interval generations, for instance every 1000 generations
+        # gen 0 is before any mutations and reproductions have been performed
+        # The printed fitness and fixations represents the fitness and fixations *after* printed gen number
+        if i % progress_update_interval == 0:
+            formatted_output = f"generation: {i}\nmean fitness: {mean_fitness:.4f}\nfixations: {fixations[-1]}\n"
+            print(formatted_output)
+
         # REPRODUCTION
         p, new_pop_size, dot_product = _func.reproduction(
             p, w, dot_product, is_binary, pop_size
         )
+
+        # MUTATION
         (
             p,
             w,
@@ -71,10 +149,10 @@ def adaptation(
             mut_rate,
             alpha,
             g,
-        )  # MUTATION
-        p, w, m, mutation_tracker = _func.tidyup_genotypes(
-            p, w, m, mutation_tracker
-        )  # CLEANUP
+        )
+
+        # CLEANUP
+        p, w, m, mutation_tracker = _func.tidyup_genotypes(p, w, m, mutation_tracker)
 
         # Since the dot product was initially calculated in the Reproduction function, this adds in
         # the part of the dot product from the extra fitness of the new new mutants.  This is just the additional fitness from the
@@ -86,16 +164,11 @@ def adaptation(
         fixations.append(min(m))
         pop_sizes.append(new_pop_size)
 
-        # prints every progress_update_interval generations, for instance every 1000 generations
-        # had i+1 earlier, check accuracy of i with actual gen number
-        if i % progress_update_interval == 0:
-            formatted_output = f"generation: {i}\nmean fitness: {mean_fitness:.4f}\nfixations: {fixations[-1]}\n\n"
-            print(formatted_output)
-
     # ensures the last bit of output doesn't get accidentally cleared
-    if i + 1 == num_gens:
-        formatted_output = f"generation: {i}\nmean fitness: {mean_fitness:.4f}\nfixations: {fixations[-1]}\n\n"
-        print(formatted_output)
+    # We add 1 here and not in the previous print because this runs after a reprod-mutation, while the previous one
+    # runs before a reprod-mutation
+    formatted_output = f"generation: {i+1}\nmean fitness: {mean_fitness:.4f}\nfixations: {fixations[-1]}\n"
+    print(formatted_output)
 
     return (
         fitnesses,
@@ -108,95 +181,8 @@ def adaptation(
 
 
 # MAIN
-if __name__ == "__main__":
-    # Main runs the simulation several times and gathers the results
-
-    # Variable Initialization
-    # pop_size = 3.4e7
-    # mut_rate = 1e-7
-    # alpha = 100
-    # epistasis parameter
-    # g = 0
-    # num_gens = 50
-    # turns the mutation tracker on or off
-    # mutation_tracker_toggle = False
-    # Which model of reproduction is being used
-    # is_binary = False
-    # sets whether or not you are allowed to overwrite existing files
-    # can_overwrite = True
-    # output_directory = "/home/joe/UbuntuDev/Ribeck-Git-Repository/output"
-    # sets how often the program prints out the generation number and mean fitness
-    # progress_update_interval = 10
-
-    parser = argparse.ArgumentParser(description="Run adaptation simulation")
-    parser.add_argument(
-        "-p",
-        "--pop_size",
-        type=float,
-        default=3.4e7,
-        help="population size",
-    )
-    parser.add_argument(
-        "-m",
-        "--mut_rate",
-        type=float,
-        default=1e-7,
-        help="mutation rate",
-    )
-    parser.add_argument(
-        "-a",
-        "--alpha",
-        type=float,
-        default=100,
-        help="Describes mean of distribution from which beneficial effect sizes are drawn from higher alpha means smaller beneficial mutations",
-    )
-    parser.add_argument("-g", "--g", type=float, default=0, help="epistasis parameter")
-    parser.add_argument(
-        "-n",
-        "--num_gens",
-        type=int,
-        default=50,
-        help="number of generations",
-    )
-    parser.add_argument(
-        "-t",
-        "--mutation_tracker_toggle",
-        type=bool,
-        default=False,
-        help="turns mutation tracker on or off",
-    )
-    parser.add_argument(
-        "-b",
-        "--is_binary",
-        type=bool,
-        default=False,
-        help="sets whether or not you are using binary fission",
-    )
-    parser.add_argument(
-        "-v",
-        "--can_overwrite",
-        type=bool,
-        default=True,
-        help="sets whether or not you are allowed to overwrite existing files",
-    )
-    parser.add_argument(
-        "-o", "--output_directory", type=str, default=".", help="output directory"
-    )
-    parser.add_argument(
-        "-u",
-        "--progress_update_interval",
-        type=int,
-        default=10,
-        help="sets how often the program prints out the generation number and mean fitness",
-    )
-    parser.add_argument(
-        "--pop_size_trajectories",
-        type=bool,
-        default=False,
-        help="sets whether to write population size trajectories to file",
-    )
-
-    args = parser.parse_args()
+def main(args):
+    # Main runs the simulation
 
     start_time = datetime.datetime.now()
     # A list of lists.  Index is run number, values are fitness-over-generation lists
@@ -237,6 +223,7 @@ if __name__ == "__main__":
         # The intersection of the first and second mutation list in new_mut_tracker is taken, then
         # fixed muts is updated to this intersection.  This intersection is then intersected with the next list.
         # When all lists have been intersected, the resulting intersection of all lists is turned back into a list type element
+        # This method takes advantage of
         for i in new_mut_tracker[1:]:
             fixed_muts.intersection_update(i)
 
@@ -248,24 +235,35 @@ if __name__ == "__main__":
         fixed_muts_trajectory = fixed_muts_trajectory + fixed_mut_sizes
         # concatenates the lists of fixed mutation effect sizes plus background for each run
         fixed_mut_back_trajectory = fixed_mut_back_trajectory + fixed_mut_back_sizes
-    fixed_muts = []
-    fixed_mut_sizes = []
-    fixed_mut_back_sizes = []
 
     # Puts generation number in [i] axis and run number within the [i] axis of the inner lists
     fitness_trajectories = np.transpose(fitness_trajectories)
     fixation_trajectories = np.transpose(fixation_trajectories)
     pop_size_trajectories = np.transpose(pop_size_trajectories)
 
-    # print(f"averaging: "+`num_gens`+"/"+`num_gens`+  "  Averaging Complete at mut_rate: "+ `mut_rate`) #displays when averaging is done
     clear_output()
     time_elapsed = str(datetime.datetime.now() - start_time)
     print(f"time elapsed: {time_elapsed}")
+    return (
+        fitness_trajectories,
+        fixation_trajectories,
+        pop_size_trajectories,
+        fixed_muts_trajectory,
+        fixed_mut_back_trajectory,
+    )
 
-    #
-    # CSV WRITER
-    #
 
+#
+# CSV WRITER
+#
+def write_output(
+    fitness_trajectories,
+    fixation_trajectories,
+    pop_size_trajectories,
+    fixed_muts_trajectory,
+    fixed_mut_back_trajectory,
+    args,
+):
     pop_exponent = int(np.log10(args.pop_size))
     pop_string = args.pop_size / (10**pop_exponent)
     # The part of the file name that describes the parameters used
@@ -277,31 +275,20 @@ if __name__ == "__main__":
         + "File was: {}"
     )
 
-    # All the data
+    # Write the fitness and fixation trajectories to file
     file_name = os.path.join(args.output_directory, "fitness" + generic_file_name)
     file_type = ".csv"
     # Checks if the file already exists, and appends a number if it does
     file_path = adaptation_sim_functions.name_fixer(file_name, file_type, 1)
 
     with open(file_path, "w") as csvfile:
-        # outwriter = csv.writer(
-        #    csvfile, delimiter=",", quotechar=" ", quoting=csv.QUOTE_MINIMAL
-        # )
         np.savetxt(file_path, fitness_trajectories, delimiter=",")
-        # for i in range(args.num_gens):
-        #    print("writing generation: " + str(i))
-
-        # outwriter.writerow(fitness_trajectories[i].tolist())
 
     file_name = os.path.join(args.output_directory, "fixation" + generic_file_name)
     file_type = ".csv"
     file_path = adaptation_sim_functions.name_fixer(file_name, file_type, 1)
     with open(file_path, "wb") as csvfile:
-        outwriter = csv.writer(
-            csvfile, delimiter=",", quotechar=" ", quoting=csv.QUOTE_MINIMAL
-        )
-        for i in range(args.num_gens):
-            outwriter.writerow(fixation_trajectories[i].tolist())
+        np.savetxt(file_path, fixation_trajectories, delimiter=",")
 
     # mutation tracker
     # concatenates the fixed mutation effect sizes of all the runs
@@ -311,15 +298,12 @@ if __name__ == "__main__":
         )
         file_type = ".csv"
         file_path = adaptation_sim_functions.name_fixer(file_name, file_type, 1)
-        with open(file_path, "wb") as csvfile:
+        with open(file_path, "w") as csvfile:
             outwriter = csv.writer(
-                csvfile, delimiter=",", quotechar=" ", quoting=csv.QUOTE_MINIMAL
+                csvfile, delimiter=",", quotechar="|", quoting=csv.QUOTE_MINIMAL
             )
             outwriter.writerow(["Fixed Mutations", "Fixed Mutations w/ Background"])
-            for i in range(len(fixed_muts_trajectory)):
-                outwriter.writerow(
-                    [fixed_muts_trajectory[i], fixed_mut_back_trajectory[i]]
-                )
+            outwriter.writerows(zip(fixed_muts_trajectory, fixed_mut_back_trajectory))
 
     if args.pop_size_trajectories == True:
         file_name = os.path.join(args.output_directory, "pop_size" + generic_file_name)
@@ -330,5 +314,28 @@ if __name__ == "__main__":
             outwriter = csv.writer(
                 csvfile, delimiter=",", quotechar=" ", quoting=csv.QUOTE_MINIMAL
             )
-            for i in range(args.num_gens):
-                outwriter.writerow(pop_size_trajectories[i].tolist())
+            np.savetxt(file_path, pop_size_trajectories, delimiter=",")
+
+
+if __name__ == "__main__":
+    # Get arguments from CLI
+    args = setup_arguments()
+
+    # Run the simulation
+    (
+        fitness_trajectories,
+        fixation_trajectories,
+        pop_size_trajectories,
+        fixed_muts_trajectory,
+        fixed_mut_back_trajectory,
+    ) = main(args)
+
+    # Write output to file
+    write_output(
+        fitness_trajectories,
+        fixation_trajectories,
+        pop_size_trajectories,
+        fixed_muts_trajectory,
+        fixed_mut_back_trajectory,
+        args,
+    )
